@@ -1,5 +1,3 @@
-Absolutely — here’s a polished `README.md` you can use for `Windows-Optimization-Health-App.ps1`.
-
 ```markdown name=README.md
 # Windows Optimization Health App
 
@@ -98,5 +96,3 @@ Add your project’s license here if desired.
 
 This GUI is intended to pair with the corresponding HTML report script used for the same set of Windows health checks.
 ```
-
-If you want, I can also turn this into a **project-style README with badges, screenshots, installation, and troubleshooting sections**, or I can **write it directly into the repo**.
