@@ -485,6 +485,7 @@ function Export-HealthHtmlReport {
     $PassCount = ($Checks | Where-Object { $_.State -eq "Pass" }).Count
     $FailCount = ($Checks | Where-Object { $_.State -eq "Fail" }).Count
     $WarningCount = ($Checks | Where-Object { $_.State -eq "Warning" }).Count
+    $InfoCount = ($Checks | Where-Object { $_.State -eq "Info" }).Count
     $TotalCount = $Checks.Count
     $HighCount = ($Checks | Where-Object { $_.Severity -eq "High" -and $_.State -eq "Fail" }).Count
 
@@ -505,7 +506,7 @@ td{padding:10px;border-bottom:1px solid #eceff3;vertical-align:top}
 <div class='header'><h1>Windows Optimization Health Report</h1>
 <div>Device: $(ConvertTo-HtmlEncoded $DeviceName) | User: $(ConvertTo-HtmlEncoded $UserName) | Generated: $(ConvertTo-HtmlEncoded $GeneratedAt)</div></div>
 <div class='container'>
-<p>Total: $TotalCount | Passed: $PassCount | Warnings: $WarningCount | Failed: $FailCount | High severity failures: $HighCount</p>
+<p>Total: $TotalCount | Passed: $PassCount | Warnings: $WarningCount | Failed: $FailCount | Info: $InfoCount | High severity failures: $HighCount</p>
 <table><tr><th>State</th><th>Severity</th><th>Category</th><th>Display name</th><th>Expected</th><th>Current value</th><th>Details</th></tr>
 $Rows
 </table></div></body></html>
@@ -538,7 +539,7 @@ $Rows
             <TextBlock x:Name="SubtitleText" Text="Scanning..." FontSize="12" Foreground="#555" Margin="0,4,0,0"/>
         </StackPanel>
 
-        <UniformGrid Grid.Row="1" Rows="1" Columns="5" Margin="0,0,0,12">
+        <UniformGrid Grid.Row="1" Rows="1" Columns="6" Margin="0,0,0,12">
             <Border Background="White" CornerRadius="8" Margin="0,0,8,0" Padding="12" BorderBrush="#0078D4" BorderThickness="0,0,0,4">
                 <StackPanel><TextBlock Text="Total Checks" FontSize="12" Foreground="#555"/><TextBlock x:Name="TotalText" Text="0" FontSize="24" FontWeight="Bold"/></StackPanel>
             </Border>
@@ -550,6 +551,9 @@ $Rows
             </Border>
             <Border Background="White" CornerRadius="8" Margin="0,0,8,0" Padding="12" BorderBrush="#D13438" BorderThickness="0,0,0,4">
                 <StackPanel><TextBlock Text="Failed" FontSize="12" Foreground="#555"/><TextBlock x:Name="FailText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#D13438"/></StackPanel>
+            </Border>
+            <Border Background="White" CornerRadius="8" Margin="0,0,8,0" Padding="12" BorderBrush="#0078D4" BorderThickness="0,0,0,4">
+                <StackPanel><TextBlock Text="Info" FontSize="12" Foreground="#555"/><TextBlock x:Name="InfoText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#0078D4"/></StackPanel>
             </Border>
             <Border Background="White" CornerRadius="8" Padding="12" BorderBrush="#D13438" BorderThickness="0,0,0,4">
                 <StackPanel><TextBlock Text="High Severity Issues" FontSize="12" Foreground="#555"/><TextBlock x:Name="HighText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#D13438"/></StackPanel>
@@ -603,6 +607,7 @@ $TotalText      = $Window.FindName("TotalText")
 $PassText       = $Window.FindName("PassText")
 $WarnText       = $Window.FindName("WarnText")
 $FailText       = $Window.FindName("FailText")
+$InfoText       = $Window.FindName("InfoText")
 $HighText       = $Window.FindName("HighText")
 $ShowAllCheckBox = $Window.FindName("ShowAllCheckBox")
 $RefreshButton  = $Window.FindName("RefreshButton")
@@ -650,12 +655,14 @@ function Run-Scan {
     $Pass  = ($script:AllChecks | Where-Object { $_.State -eq "Pass" }).Count
     $Warn  = ($script:AllChecks | Where-Object { $_.State -eq "Warning" }).Count
     $Fail  = ($script:AllChecks | Where-Object { $_.State -eq "Fail" }).Count
+    $Info  = ($script:AllChecks | Where-Object { $_.State -eq "Info" }).Count
     $High  = ($script:AllChecks | Where-Object { $_.Severity -eq "High" -and $_.State -eq "Fail" }).Count
 
     $TotalText.Text = $Total
     $PassText.Text  = $Pass
     $WarnText.Text  = $Warn
     $FailText.Text  = $Fail
+    $InfoText.Text  = $Info
     $HighText.Text  = $High
 
     $DeviceName = $env:COMPUTERNAME
